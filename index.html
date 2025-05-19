@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Spine Web Player</title>
+    <meta name="viewport" content="width=device-width" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+    <script src="https://unpkg.com/@esotericsoftware/spine-player@4.2.*/dist/iife/spine-player.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/@esotericsoftware/spine-player@4.2.*/dist/spine-player.css">
+    <style>
+      html, body {
+        background-color: gray;
+        font-family: 'Chicalo';
+        height: 100%;
+        width: 100%;
+      }
+      </style>
+  </head>
+  <body>
+    <div id="player-container" style="width: 360px; height: 360px;"></div>
+    <button id="btn_click">Reset</button>
+    <br>
+    <button id="btn_click_1" hidden>Dig (normal)</button>
+    <button id="btn_click_2" hidden>Dig (turbo)</button>
+    <br>
+    <button id="btn_click_3">Dig (normal + loop)</button>
+    <button id="btn_click_4">Dig (turbo + loop)</button>
+    <script>
+      const audioNormal = new Howl({
+        loop: false,
+        src: ['bet_normal_speed.mp3'],
+      });
+      const audioTurbo = new Howl({
+        loop: false,
+        src: ['bet_turbo_speed.mp3'],
+      });
+      const audioNormalLoop = new Howl({
+        loop: true,
+        src: ['bet_normal_speed.mp3'],
+      });
+      const audioTurboLoop = new Howl({
+        loop: true,
+        src: ['bet_turbo_speed.mp3'],
+      });
+      const player = new spine.SpinePlayer("player-container", {
+        // loop: false,
+        alpha: true,
+        showControls: false,
+        premultipliedAlpha: false,
+        viewport: {
+          x: -540,
+          y: -540,
+          width: 1082,
+          height: 1082,
+          padLeft: 0,
+          padRight: 0,
+          padTop: 0,
+          padBottom: 0,
+        },
+        success: function (player) {
+          player.animationState.setAnimation(1, 'Ch_Idle_1', true);
+          player.animationState.setAnimation(2, 'Sy_none', false);
+        },
+        alpha: true,
+
+        skin: 'none',
+        animation: 'Bg_Cave_1',
+        skeleton: "./TG_All.json",
+        atlas: "./TG_All.atlas"
+      });
+      btn_click.addEventListener('click', async () => {
+        player.animationState.setAnimation(1, 'Ch_Idle_1', false);
+        audioNormal.stop();
+        audioTurbo.stop();
+        audioNormalLoop.stop();
+        audioTurboLoop.stop();
+      });
+      btn_click_1.addEventListener('click', () => {
+        player.animationState.setAnimation(1, 'Ch_Loop_Normal_1', false);
+        audioNormal.play();
+      });
+      btn_click_2.addEventListener('click', () => {
+        player.animationState.setAnimation(1, 'Ch_Loop_Turbo_1', false);
+        audioTurbo.play();
+      });
+      btn_click_3.addEventListener('click', () => {
+        player.animationState.setAnimation(1, 'Ch_Loop_Normal_1', true);
+        audioNormalLoop.play();
+      });
+      btn_click_4.addEventListener('click', () => {
+        player.animationState.setAnimation(1, 'Ch_Loop_Turbo_1', true);
+        audioTurboLoop.play();
+      });
+    </script>
+  </body>
+</html>
