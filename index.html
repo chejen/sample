@@ -25,8 +25,14 @@
     <br>
     <button id="btn_click_3">Dig (normal + loop)</button>
     <button id="btn_click_4">Dig (turbo + loop)</button>
+    <br><br>
+    <button id="btn_click_5">Dig (normal + loop + custom event)</button>
     <script>
       let count = 0;
+      const audioNormalSpecial = new Howl({
+        loop: false,
+        src: ['0.4.mp3'],
+      });
       const audioNormal = new Howl({
         loop: false,
         src: ['bet_normal_speed.mp3'],
@@ -63,6 +69,15 @@
           player.animationState.setAnimation(2, 'Sy_none', false);
 
           player.animationState.addListener({
+            event: function (trackEntry, event) {
+              console.log(count)
+              if (
+                event.data.name === 'Digging Normal' &&
+                count >= 1000
+              ) {
+                audioNormalSpecial.play();
+              }
+            },
             complete: function ({ animation }) {
               if (animation.name === 'Ch_Loop_Normal_1') {
                 if (++count === 2) {
@@ -77,7 +92,7 @@
 
         skin: 'none',
         animation: 'Bg_Cave_1',
-        skeleton: "./TG_All.json",
+        skeleton: "./TG_All.skel",
         atlas: "./TG_All.atlas"
       });
       btn_click.addEventListener('click', async () => {
@@ -106,6 +121,10 @@
       btn_click_4.addEventListener('click', () => {
         player.animationState.setAnimation(1, 'Ch_Loop_Turbo_1', true);
         audioTurboLoop.play();
+      });
+      btn_click_5.addEventListener('click', () => {
+        count = 1000;
+        player.animationState.setAnimation(1, 'Ch_Loop_Normal_1', true);
       });
     </script>
   </body>
